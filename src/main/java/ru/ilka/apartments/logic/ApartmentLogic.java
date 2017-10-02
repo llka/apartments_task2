@@ -22,8 +22,16 @@ public class ApartmentLogic {
         return apartmentRepository.findAll();
     }
 
-    public List<Apartment> findByCostBetween(int costLow, int costHigh){
-        return  apartmentRepository.findByCostBetween(costLow,costHigh);
+    public List<Apartment> findByCostBetween(int minCost, int maxCost) {
+        return apartmentRepository.findByCostBetween(minCost, maxCost);
+    }
+
+    public List<Apartment> findByCostLessThen(int maxCost){
+        return apartmentRepository.findByCostLessThanEqual(maxCost);
+    }
+
+    public Apartment save(Apartment apartment) {
+        return apartmentRepository.save(apartment);
     }
 
     public void deleteAll() {
@@ -31,10 +39,6 @@ public class ApartmentLogic {
     }
 
     public void delete(int id) {
-        apartmentRepository.delete(id);
-    }
-
-    public Apartment save(Apartment apartment) {
-        return apartmentRepository.save(apartment);
+        apartmentRepository.deleteById(id);
     }
 }

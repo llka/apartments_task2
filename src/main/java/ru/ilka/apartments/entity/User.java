@@ -1,5 +1,7 @@
 package ru.ilka.apartments.entity;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -8,9 +10,10 @@ import java.util.Set;
 public class User implements IDatabaseEntity {
 
     @Id
-//    @GeneratedValue(strategy = GenerationType.AUTO)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "USER_SEQ")
-    @SequenceGenerator(sequenceName = "user_seq", initialValue = 1, allocationSize = 1, name = "USER_SEQ")
+    @GeneratedValue(generator = "increment")
+    @GenericGenerator(name = "increment", strategy = "increment")
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "USER_SEQ")
+//    @SequenceGenerator(sequenceName = "user_seq", initialValue = 1, allocationSize = 1, name = "USER_SEQ")
     private int id;
 
     @Column(name = "LOGIN")

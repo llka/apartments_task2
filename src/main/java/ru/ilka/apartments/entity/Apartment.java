@@ -1,5 +1,8 @@
 package ru.ilka.apartments.entity;
 
+import org.hibernate.annotations.GeneratorType;
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Set;
@@ -9,8 +12,10 @@ import java.util.Set;
 public class Apartment implements IDatabaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "APRT_SEQ")
-    @SequenceGenerator(sequenceName = "apartment_seq", initialValue = 1, allocationSize = 1, name = "APRT_SEQ")
+    @GeneratedValue(generator = "increment")
+    @GenericGenerator(name = "increment", strategy = "increment")
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "APRT_SEQ")
+//    @SequenceGenerator(sequenceName = "apartment_seq", initialValue = 5, allocationSize = 1, name = "APRT_SEQ")
     private int id;
 
     @Column(name = "BOOKED_FROM")
