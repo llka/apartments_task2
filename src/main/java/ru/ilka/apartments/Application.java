@@ -1,7 +1,9 @@
 package ru.ilka.apartments;
 
 
-import org.apache.log4j.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -13,6 +15,10 @@ import javax.sql.DataSource;
 
 @SpringBootApplication
 public class Application implements CommandLineRunner {
+
+    //private static Logger logger = Logger.getLogger(Application.class);
+    private static Logger logger = LoggerFactory.getLogger(Application.class);
+
     @Autowired
     private DataSource dataSource;
 
@@ -24,6 +30,8 @@ public class Application implements CommandLineRunner {
 
     public static void main(String[] args) throws Exception {
         SpringApplication.run(Application.class, args);
+        logger.info("hi");
+        logger.warn("warn");
     }
 
     @Override
