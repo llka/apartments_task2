@@ -13,8 +13,8 @@ import ru.ilka.apartments.logic.ApartmentLogic;
 import ru.ilka.apartments.logic.UserLogic;
 
 import javax.sql.DataSource;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @SpringBootApplication
 public class Application implements CommandLineRunner {
@@ -36,30 +36,11 @@ public class Application implements CommandLineRunner {
 
     @Override
     public void run(String... strings) throws Exception {
-
-        logger.debug("users - findById(2)");
-        logger.info(userLogic.findById(2));
-
-        logger.debug("users - findByLogin(A)");
-        logger.info(userLogic.findByLogin("a"));
-
         logger.debug("users - findAll");
-        userLogic.findAll().forEach(user -> logger.info(user.toString()));
+        userLogic.findAll().forEach(user -> logger.info(user));
 
-        logger.debug("users - findAllNotBanned");
-        userLogic.findAllNotBanned().forEach(user -> logger.info(user.toString()));
-
-        logger.debug("users - save");
-        User userToSave = new User();
-        userToSave.setLogin("Just_saved_2");
-        userLogic.save(userToSave);
-        userLogic.findAll().forEach(u -> logger.info(u.toString()));
-
-        logger.debug("update(2)");
-        userToSave = userLogic.findById(2);
-        userToSave.setLogin("A");
-        userLogic.save(userToSave);
-        userLogic.findAll().forEach(u -> logger.info(u.toString()));
+        logger.debug("apartments - findAll");
+        apartmentLogic.findAll().forEach(apartment -> logger.info(apartment.toString()));
 
         logger.debug("Done!");
     }

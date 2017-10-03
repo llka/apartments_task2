@@ -1,5 +1,6 @@
 package ru.ilka.apartments.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -13,8 +14,6 @@ public class Apartment implements IDatabaseEntity {
     @Id
     @GeneratedValue(generator = "increment")
     @GenericGenerator(name = "increment", strategy = "increment")
-//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "APRT_SEQ")
-//    @SequenceGenerator(sequenceName = "apartment_seq", initialValue = 5, allocationSize = 1, name = "APRT_SEQ")
     private int id;
 
     @Column(name = "BOOKED_FROM")
@@ -27,6 +26,7 @@ public class Apartment implements IDatabaseEntity {
     private int cost;
 
     @ManyToMany(mappedBy = "apartments")
+    @JsonIgnore
     private Set<User> users;
 
     public Apartment() {

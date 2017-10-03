@@ -1,8 +1,10 @@
 package ru.ilka.apartments.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -27,6 +29,7 @@ public class User implements IDatabaseEntity {
     @JoinTable(name = "USERS_HAS_APARTMENTS",
             joinColumns = @JoinColumn(name = "USERS_FK", referencedColumnName = "ID"),
             inverseJoinColumns = @JoinColumn(name = "APARTMENTS_FK", referencedColumnName = "ID"))
+    @JsonIgnore
     private Set<Apartment> apartments;
 
     public User() {
@@ -79,6 +82,9 @@ public class User implements IDatabaseEntity {
     }
 
     public Set<Apartment> getApartments() {
+        if (apartments == null) {
+            apartments = new HashSet<>();
+        }
         return apartments;
     }
 
