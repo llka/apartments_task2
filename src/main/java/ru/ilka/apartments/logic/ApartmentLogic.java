@@ -26,7 +26,7 @@ public class ApartmentLogic {
         return apartmentRepository.findByCostBetween(minCost, maxCost);
     }
 
-    public List<Apartment> findByCostLessThen(int maxCost){
+    public List<Apartment> findByCostLessThen(int maxCost) {
         return apartmentRepository.findByCostLessThanEqual(maxCost);
     }
 
@@ -39,6 +39,6 @@ public class ApartmentLogic {
     }
 
     public void delete(int id) {
-        apartmentRepository.deleteById(id);
+        apartmentRepository.delete(id);
     }
 }

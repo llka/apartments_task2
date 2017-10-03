@@ -14,16 +14,24 @@ public class UserLogic {
     @Autowired
     private UserRepository userRepository;
 
-    public User findUserById(int id) {
+    public User findById(int id) {
         return userRepository.findOne(id);
     }
 
-    public User findUserByLogin(String login) {
+    public User findByLogin(String login) {
         return userRepository.findByLoginIgnoreCase(login);
     }
 
     public List<User> findAll() {
         return userRepository.findAll();
+    }
+
+    public List<User> findAllNotBanned(){
+        return userRepository.findByBanFalse();
+    }
+
+    public List<User> findAllBanned(){
+        return userRepository.findByBanTrue();
     }
 
 //    public List<User> findAllOrderByLogin() {
@@ -46,7 +54,4 @@ public class UserLogic {
         userRepository.delete(id);
     }
 
-    public void delete(User user) {
-        userRepository.delete(user);
-    }
 }

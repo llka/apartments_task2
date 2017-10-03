@@ -1,18 +1,13 @@
 package ru.ilka.apartments.dao;
 
-
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import ru.ilka.apartments.entity.Apartment;
-
-import java.sql.Timestamp;
 import java.util.List;
 
 public interface ApartmentRepository extends CrudRepository<Apartment, Integer> {
 
     @Override
-    Apartment findOne(Integer integer);
+    Apartment findOne(Integer id);
 
     List<Apartment> findAll();
 
@@ -26,5 +21,6 @@ public interface ApartmentRepository extends CrudRepository<Apartment, Integer> 
     @Override
     void deleteAll();
 
-    void deleteById(Integer id);
+    @Override
+    void delete(Integer id);
 }

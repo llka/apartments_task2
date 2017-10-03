@@ -8,6 +8,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import ru.ilka.apartments.entity.Apartment;
+import ru.ilka.apartments.entity.User;
 import ru.ilka.apartments.logic.ApartmentLogic;
 import ru.ilka.apartments.logic.UserLogic;
 
@@ -36,41 +37,29 @@ public class Application implements CommandLineRunner {
     @Override
     public void run(String... strings) throws Exception {
 
+        logger.debug("users - findById(2)");
+        logger.info(userLogic.findById(2));
+
+        logger.debug("users - findByLogin(A)");
+        logger.info(userLogic.findByLogin("a"));
+
         logger.debug("users - findAll");
         userLogic.findAll().forEach(user -> logger.info(user.toString()));
 
-        logger.debug("apartments - findAll");
-        apartmentLogic.findAll().forEach(apartment -> logger.info(apartment.toString()));
+        logger.debug("users - findAllNotBanned");
+        userLogic.findAllNotBanned().forEach(user -> logger.info(user.toString()));
 
-        logger.debug("apartments - findApartmentsBetween(15,40)");
-        apartmentLogic.findByCostBetween(15, 40).forEach(apartment -> logger.info(apartment.toString()));
+        logger.debug("users - save");
+        User userToSave = new User();
+        userToSave.setLogin("Just_saved_2");
+        userLogic.save(userToSave);
+        userLogic.findAll().forEach(u -> logger.info(u.toString()));
 
-        logger.debug("apartments - findApartmentsByCostLessThen(15)");
-        apartmentLogic.findByCostLessThen(15).forEach(apartment -> logger.info(apartment.toString()));
-
-        logger.debug("apartments - findById(2)");
-        logger.info(apartmentLogic.findById(2));
-
-        logger.debug("apartments - update(2)");
-        apartmentLogic.save(new Apartment(2,Timestamp.valueOf(LocalDateTime.now()),Timestamp.valueOf(LocalDateTime.now()),55));
-        logger.debug("apartments - findAll");
-        apartmentLogic.findAll().forEach(apartment -> logger.info(apartment.toString()));
-
-        logger.debug("apartments - deleteAll)");
-        apartmentLogic.deleteAll();
-
-        logger.debug("apartments - findAll");
-        apartmentLogic.findAll().forEach(apartment -> logger.info(apartment.toString()));
-
-        logger.debug("apartments - save)");
-        apartmentLogic.save(new Apartment(2,Timestamp.valueOf(LocalDateTime.now()),Timestamp.valueOf(LocalDateTime.now()),55));
-        apartmentLogic.save(new Apartment(5,Timestamp.valueOf(LocalDateTime.now()),Timestamp.valueOf(LocalDateTime.now()),55));
-        apartmentLogic.save(new Apartment());
-        apartmentLogic.save(new Apartment());
-
-        logger.debug("apartments - findAll");
-        apartmentLogic.findAll().forEach(apartment -> logger.info(apartment.toString()));
-
+        logger.debug("update(2)");
+        userToSave = userLogic.findById(2);
+        userToSave.setLogin("A");
+        userLogic.save(userToSave);
+        userLogic.findAll().forEach(u -> logger.info(u.toString()));
 
         logger.debug("Done!");
     }

@@ -1,6 +1,5 @@
 package ru.ilka.apartments.entity;
 
-import org.hibernate.annotations.GeneratorType;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;

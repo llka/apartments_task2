@@ -12,8 +12,6 @@ public class User implements IDatabaseEntity {
     @Id
     @GeneratedValue(generator = "increment")
     @GenericGenerator(name = "increment", strategy = "increment")
-//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "USER_SEQ")
-//    @SequenceGenerator(sequenceName = "user_seq", initialValue = 1, allocationSize = 1, name = "USER_SEQ")
     private int id;
 
     @Column(name = "LOGIN")
@@ -21,7 +19,6 @@ public class User implements IDatabaseEntity {
 
     @Column(name = "PASSWORD")
     private String password;
-
 
     @Column(name = "BAN")
     private boolean ban;
@@ -81,10 +78,6 @@ public class User implements IDatabaseEntity {
         this.ban = ban;
     }
 
-//    @ManyToMany(cascade = CascadeType.ALL)
-//    @JoinTable(name = "USERS_HAS_APARTMENTS",
-//            joinColumns = @JoinColumn(name = "USERS_FK", referencedColumnName = "ID"),
-//            inverseJoinColumns = @JoinColumn(name = "APARTMENTS_FK", referencedColumnName = "ID"))
     public Set<Apartment> getApartments() {
         return apartments;
     }
