@@ -7,6 +7,7 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+
 @Entity
 @Table(name = "USERS")
 public class User implements IDatabaseEntity {
@@ -25,7 +26,7 @@ public class User implements IDatabaseEntity {
     @Column(name = "BAN")
     private boolean ban;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "USERS_HAS_APARTMENTS",
             joinColumns = @JoinColumn(name = "USERS_FK", referencedColumnName = "ID"),
             inverseJoinColumns = @JoinColumn(name = "APARTMENTS_FK", referencedColumnName = "ID"))
@@ -33,6 +34,7 @@ public class User implements IDatabaseEntity {
     private Set<Apartment> apartments;
 
     public User() {
+        this.apartments = new HashSet<>();
     }
 
     public User(int id, String login, String password, boolean ban) {
@@ -40,6 +42,7 @@ public class User implements IDatabaseEntity {
         this.login = login;
         this.password = password;
         this.ban = ban;
+        this.apartments = new HashSet<>();
     }
 
     public User(User user) {
@@ -47,6 +50,7 @@ public class User implements IDatabaseEntity {
         this.login = user.login;
         this.password = user.password;
         this.ban = user.ban;
+        this.apartments = user.apartments;
     }
 
     public int getId() {
@@ -82,9 +86,6 @@ public class User implements IDatabaseEntity {
     }
 
     public Set<Apartment> getApartments() {
-        if (apartments == null) {
-            apartments = new HashSet<>();
-        }
         return apartments;
     }
 

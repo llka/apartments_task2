@@ -2,10 +2,15 @@ package ru.ilka.apartments.logic;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import ru.ilka.apartments.dao.ApartmentRepository;
 import ru.ilka.apartments.entity.Apartment;
+import ru.ilka.apartments.entity.User;
+import ru.ilka.apartments.exception.LogicException;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -14,7 +19,11 @@ public class ApartmentLogic {
     @Autowired
     private ApartmentRepository apartmentRepository;
 
-    public Apartment findById(int id) {
+    public Apartment findById(int id) throws LogicException {
+        Apartment apartment = apartmentRepository.findOne(id);
+        if (apartment == null) {
+            throw new LogicException("There is no apartment with id = " + id);
+        }
         return apartmentRepository.findOne(id);
     }
 
@@ -22,11 +31,17 @@ public class ApartmentLogic {
         return apartmentRepository.findAll();
     }
 
-    public List<Apartment> findByCostBetween(int minCost, int maxCost) {
+    public List<Apartment> findByCostBetween(int minCost, int maxCost) throws LogicException {
+        if (maxCost < minCost || maxCost < 0) {
+            throw new LogicException("Check cost scopes");
+        }
         return apartmentRepository.findByCostBetween(minCost, maxCost);
     }
 
-    public List<Apartment> findByCostLessThen(int maxCost) {
+    public List<Apartment> findByCostLessThen(int maxCost) throws LogicException {
+        if (maxCost < 0) {
+            throw new LogicException("Check cost scopes");
+        }
         return apartmentRepository.findByCostLessThanEqual(maxCost);
     }
 
@@ -38,7 +53,23 @@ public class ApartmentLogic {
         apartmentRepository.deleteAll();
     }
 
-    public void delete(int id) {
-        apartmentRepository.delete(id);
+    public void delete(int id) throws LogicException {
+        try {
+            apartmentRepository.delete(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new LogicException("There is no apartment with id = " + id);
+        }
     }
+
+    public List<User> getApartmentUsers(int apartmentId) throws LogicException {
+        List<User> users = null;
+        try {
+            Apartment apartment = findById(apartmentId);
+            users = new ArrayList<>(apartment.getUsers());
+        } catch (LogicException e) {
+            throw new LogicException("Can not get apartment users", e);
+        }
+        return users;
+    }
+
 }

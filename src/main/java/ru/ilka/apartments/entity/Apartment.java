@@ -5,7 +5,9 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.HashSet;
 import java.util.Set;
+
 
 @Entity
 @Table(name = "APARTMENTS")
@@ -30,6 +32,7 @@ public class Apartment implements IDatabaseEntity {
     private Set<User> users;
 
     public Apartment() {
+        this.users = new HashSet<>();
     }
 
     public Apartment(int apartmentId, Timestamp bookedFrom, Timestamp bookedTo, int cost) {
@@ -37,6 +40,7 @@ public class Apartment implements IDatabaseEntity {
         this.bookedFrom = bookedFrom;
         this.bookedTo = bookedTo;
         this.cost = cost;
+        this.users = new HashSet<>();
     }
 
     public int getApartmentId() {
@@ -71,7 +75,6 @@ public class Apartment implements IDatabaseEntity {
         this.cost = cost;
     }
 
-    //@ManyToMany(mappedBy = "USERS")
     public Set<User> getUsers() {
         return users;
     }

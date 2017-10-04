@@ -1,6 +1,5 @@
 package ru.ilka.apartments;
 
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +12,8 @@ import ru.ilka.apartments.logic.ApartmentLogic;
 import ru.ilka.apartments.logic.UserLogic;
 
 import javax.sql.DataSource;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+
 
 @SpringBootApplication
 public class Application implements CommandLineRunner {
@@ -37,10 +36,24 @@ public class Application implements CommandLineRunner {
     @Override
     public void run(String... strings) throws Exception {
         logger.debug("users - findAll");
-        userLogic.findAll().forEach(user -> logger.info(user));
+        ArrayList<User> users = (ArrayList<User>) userLogic.findAll();
+        users.forEach(user -> logger.info(user));
 
         logger.debug("apartments - findAll");
-        apartmentLogic.findAll().forEach(apartment -> logger.info(apartment.toString()));
+        ArrayList<Apartment> apartments = (ArrayList<Apartment>) apartmentLogic.findAll();
+        apartments.forEach(apartment -> logger.info(apartment));
+
+        logger.debug("users apartments");
+        users.forEach(user -> {
+            logger.debug("--- " + user);
+            user.getApartments().forEach(apartment -> logger.info(apartment));
+        });
+
+        logger.debug("apartments users");
+        apartments.forEach(apartment -> {
+            logger.debug("--- " + apartment);
+            apartment.getUsers().forEach(user -> logger.info(user));
+        });
 
         logger.debug("Done!");
     }

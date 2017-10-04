@@ -1,16 +1,16 @@
 package ru.ilka.apartments.logic;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import ru.ilka.apartments.dao.UserRepository;
 import ru.ilka.apartments.entity.Apartment;
 import ru.ilka.apartments.entity.User;
-import ru.ilka.apartments.exception.DaoException;
 import ru.ilka.apartments.exception.LogicException;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+
 
 @Service
 public class UserLogic {
@@ -20,7 +20,7 @@ public class UserLogic {
 
     public User findById(int id) throws LogicException {
         User user = userRepository.findOne(id);
-        if(user == null){
+        if (user == null) {
             throw new LogicException("No user with id = " + id);
         }
         return userRepository.findOne(id);
@@ -50,33 +50,22 @@ public class UserLogic {
         userRepository.deleteAll();
     }
 
-    public void deleteById(int id) {
-        userRepository.delete(id);
+    public void delete(int id) throws LogicException {
+        try {
+            userRepository.delete(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new LogicException("There is no user with id = " + id);
+        }
     }
 
-    public void bookApartments(int userId, Set<Apartment> bookedApartments) throws LogicException {
-        User user = findById(userId);
-        Set<Apartment> userApartments = user.getApartments();
-
-        userApartments.addAll(bookedApartments);
-        user.setApartments(userApartments);
-        save(user);
+    public List<Apartment> getUserApartments(int userId) throws LogicException {
+        List<Apartment> bookedApartments = null;
+        try {
+            User user = findById(userId);
+            bookedApartments = new ArrayList<>(user.getApartments());
+        } catch (LogicException e) {
+            throw new LogicException("Can not get user apartments", e);
+        }
+        return bookedApartments;
     }
-
-    public void bookApartment(int userId, Apartment apartment) throws LogicException {
-        User user = findById(userId);
-        Set<Apartment> userApartments = user.getApartments();
-        userApartments.add(apartment);
-        user.setApartments(userApartments);
-        save(user);
-    }
-
-    public void freeApartment(int userId, Apartment apartment) throws LogicException {
-        User user = findById(userId);
-        Set<Apartment> userApartments = user.getApartments();
-        userApartments.remove(apartment);
-        user.setApartments(userApartments);
-        save(user);
-    }
-
 }
