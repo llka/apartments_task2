@@ -1,5 +1,4 @@
 import {Injectable} from '@angular/core';
-import {Injectable} from '@angular/core';
 import {Headers, Http} from '@angular/http';
 import {User} from "./User";
 import {Apartment} from "./Apartment";

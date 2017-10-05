@@ -23,11 +23,15 @@ public class UserLogic {
         if (user == null) {
             throw new LogicException("No user with id = " + id);
         }
-        return userRepository.findOne(id);
+        return user;
     }
 
-    public User findByLogin(String login) {
-        return userRepository.findByLoginIgnoreCase(login);
+    public User findByLogin(String login) throws LogicException {
+        User user = userRepository.findByLoginIgnoreCase(login);
+        if (user == null) {
+            throw new LogicException("No user with login = " + login);
+        }
+        return user;
     }
 
     public List<User> findAll() {

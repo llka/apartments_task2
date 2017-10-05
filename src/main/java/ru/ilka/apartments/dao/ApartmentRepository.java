@@ -14,9 +14,11 @@ public interface ApartmentRepository extends CrudRepository<Apartment, Integer> 
 
     List<Apartment> findAll();
 
-    List<Apartment> findByCostBetween(int costLow, int costHigh);
+    List<Apartment> findByCostBetweenOrderByCost(int costLow, int costHigh);
 
-    List<Apartment> findByCostLessThanEqual(int maxCost);
+    List<Apartment> findByCostLessThanEqualOrderByCost(int maxCost);
+
+    List<Apartment> findByCostGreaterThanEqualOrderByCost(int minCost);
 
     @Override
     <S extends Apartment> S save(S s);

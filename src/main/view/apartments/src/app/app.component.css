@@ -28,12 +28,12 @@
 }
 
 .header__title{
-  font-size: 20px;
+  font-size: 24px;
   pointer-events: none;
   cursor: default;
 }
 
 .header__links{
-  font-size: 17px;
+  font-size: 20px;
 }
 

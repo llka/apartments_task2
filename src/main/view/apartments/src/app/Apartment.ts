@@ -1,8 +1,8 @@
 import {Timestamp} from "rxjs";
 export class Apartment{
   private _id: number;
-  private _bookedFrom: Timestamp;
-  private _bookedTo: Timestamp;
+  private _bookedFrom: Date;
+  private _bookedTo: Date;
   private _cost: number;
 
 
@@ -14,19 +14,19 @@ export class Apartment{
     this._id = value;
   }
 
-  get bookedFrom(): Timestamp {
+  get bookedFrom(): Date {
     return this._bookedFrom;
   }
 
-  set bookedFrom(value: Timestamp) {
+  set bookedFrom(value: Date) {
     this._bookedFrom = value;
   }
 
-  get bookedTo(): Timestamp {
+  get bookedTo(): Date {
     return this._bookedTo;
   }
 
-  set bookedTo(value: Timestamp) {
+  set bookedTo(value: Date) {
     this._bookedTo = value;
   }
 

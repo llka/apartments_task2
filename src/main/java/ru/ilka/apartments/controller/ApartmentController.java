@@ -24,7 +24,29 @@ public class ApartmentController {
     private ApartmentLogic apartmentLogic;
 
     @GetMapping(produces = MEDIA_TYPE_JSON)
-    public List<Apartment> getAllApartments() {
+    public List<Apartment> getAllApartments(@RequestParam(value = "minCost", required = false, defaultValue = "-1") int minCost,
+                                            @RequestParam(value = "maxCost", required = false, defaultValue = "-1") int maxCost) {
+        if (minCost < 0 && maxCost < 0) {
+            return apartmentLogic.findAll();
+        } else if (minCost > 0 && maxCost < 0) {
+            try {
+                return apartmentLogic.findByCostGreaterThen(minCost);
+            } catch (LogicException e) {
+                logger.error(e.getMessage());
+            }
+        } else if (minCost < 0 && maxCost > 0) {
+            try {
+                return apartmentLogic.findByCostLessThen(maxCost);
+            } catch (LogicException e) {
+                logger.error(e.getMessage());
+            }
+        } else {
+            try {
+                return apartmentLogic.findByCostBetween(minCost, maxCost);
+            } catch (LogicException e) {
+                logger.error(e.getMessage());
+            }
+        }
         return apartmentLogic.findAll();
     }
 
@@ -62,17 +84,8 @@ public class ApartmentController {
         }
     }
 
-    @GetMapping(consumes = MEDIA_TYPE_JSON, produces = MEDIA_TYPE_JSON)
-    public List<Apartment> getApartmentsByCostBetween(@RequestBody int minCost, @RequestBody int maxCost) {
-        try {
-            return apartmentLogic.findByCostBetween(minCost, maxCost);
-        } catch (LogicException e) {
-            return new ArrayList<Apartment>();
-        }
-    }
-
     @GetMapping(value = "/{id}/users", produces = MEDIA_TYPE_JSON)
-    public List<User> getUserApartments(@PathVariable int id) {
+    public List<User> getApartmentUsers(@PathVariable int id) {
         try {
             return apartmentLogic.getApartmentUsers(id);
         } catch (LogicException e) {

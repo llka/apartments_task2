@@ -25,15 +25,33 @@ public class UserController {
     private UserLogic userLogic;
 
     @GetMapping(produces = MEDIA_TYPE_JSON)
-    public List<User> getAllUsers() {
-        return userLogic.findAll();
+    public List<User> getAllUsers(@RequestParam(value = "ban", required = false) Boolean ban) {
+        if(ban == null) {
+            return userLogic.findAll();
+        }else if (ban){
+            return userLogic.findAllBanned();
+        }else {
+            return userLogic.findAllNotBanned();
+        }
     }
 
-    @GetMapping(value = "/{id}", produces = MEDIA_TYPE_JSON)
+    @GetMapping(value = "/{id:[0-9]+}", produces = MEDIA_TYPE_JSON)
     public User getUser(@PathVariable int id) {
         User user;
         try {
             user = userLogic.findById(id);
+        } catch (LogicException e) {
+            user = new User();
+            user.setLogin(e.getMessage());
+        }
+        return user;
+    }
+
+    @GetMapping(value = "/{login:[a-zA-Z]+\\w?}", produces = MEDIA_TYPE_JSON)
+    public User getUserByLogin(@PathVariable String login) {
+        User user;
+        try {
+            user = userLogic.findByLogin(login);
         } catch (LogicException e) {
             user = new User();
             user.setLogin(e.getMessage());

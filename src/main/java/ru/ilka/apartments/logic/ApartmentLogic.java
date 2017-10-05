@@ -10,7 +10,6 @@ import ru.ilka.apartments.entity.User;
 import ru.ilka.apartments.exception.LogicException;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -35,14 +34,21 @@ public class ApartmentLogic {
         if (maxCost < minCost || maxCost < 0) {
             throw new LogicException("Check cost scopes");
         }
-        return apartmentRepository.findByCostBetween(minCost, maxCost);
+        return apartmentRepository.findByCostBetweenOrderByCost(minCost, maxCost);
     }
 
     public List<Apartment> findByCostLessThen(int maxCost) throws LogicException {
         if (maxCost < 0) {
             throw new LogicException("Check cost scopes");
         }
-        return apartmentRepository.findByCostLessThanEqual(maxCost);
+        return apartmentRepository.findByCostLessThanEqualOrderByCost(maxCost);
+    }
+
+    public List<Apartment> findByCostGreaterThen(int minCost) throws LogicException {
+        if (minCost < 0) {
+            throw new LogicException("Check cost scopes");
+        }
+        return apartmentRepository.findByCostGreaterThanEqualOrderByCost(minCost);
     }
 
     public Apartment save(Apartment apartment) {
