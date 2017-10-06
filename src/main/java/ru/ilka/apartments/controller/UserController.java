@@ -1,12 +1,12 @@
 package ru.ilka.apartments.controller;
 
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.ilka.apartments.entity.Apartment;
 import ru.ilka.apartments.entity.User;
+import ru.ilka.apartments.exception.ControllerException;
 import ru.ilka.apartments.exception.LogicException;
 import ru.ilka.apartments.logic.UserLogic;
 
@@ -35,28 +35,23 @@ public class UserController {
         }
     }
 
+    @ResponseBody
     @GetMapping(value = "/{id:[0-9]+}", produces = MEDIA_TYPE_JSON)
-    public User getUser(@PathVariable int id) {
-        User user;
+    public User getUser(@PathVariable int id) throws ControllerException {
         try {
-            user = userLogic.findById(id);
+            return userLogic.findById(id);
         } catch (LogicException e) {
-            user = new User();
-            user.setLogin(e.getMessage());
+            throw new ControllerException(e);
         }
-        return user;
     }
 
     @GetMapping(value = "/{login:[a-zA-Z]+\\w?}", produces = MEDIA_TYPE_JSON)
-    public User getUserByLogin(@PathVariable String login) {
-        User user;
+    public User getUserByLogin(@PathVariable String login) throws ControllerException {
         try {
-            user = userLogic.findByLogin(login);
+            return userLogic.findByLogin(login);
         } catch (LogicException e) {
-            user = new User();
-            user.setLogin(e.getMessage());
+            throw new ControllerException(e);
         }
-        return user;
     }
 
     @PostMapping(consumes = MEDIA_TYPE_JSON, produces = MEDIA_TYPE_JSON)
@@ -70,11 +65,11 @@ public class UserController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public void deleteUser(@PathVariable int id) {
+    public void deleteUser(@PathVariable int id) throws ControllerException {
         try {
             userLogic.delete(id);
         } catch (LogicException e) {
-            logger.error(e.getMessage());
+            throw new ControllerException(e);
         }
     }
 
@@ -84,11 +79,11 @@ public class UserController {
     }
 
     @GetMapping(value = "/{id}/apartments", produces = MEDIA_TYPE_JSON)
-    public List<Apartment> getUserApartments(@PathVariable int id) {
+    public List<Apartment> getUserApartments(@PathVariable int id) throws ControllerException {
         try {
             return userLogic.getUserApartments(id);
         } catch (LogicException e) {
-            return new ArrayList<Apartment>();
+            throw new ControllerException(e);
         }
     }
 }

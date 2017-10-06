@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.ilka.apartments.entity.Apartment;
 import ru.ilka.apartments.entity.User;
+import ru.ilka.apartments.exception.ControllerException;
 import ru.ilka.apartments.exception.LogicException;
 import ru.ilka.apartments.logic.BookingLogic;
 
@@ -24,39 +25,39 @@ public class BookingController {
     private BookingLogic bookingLogic;
 
     @PostMapping
-    public void bookApartment(@RequestParam("userId") int userId, @RequestParam("apartmentId") int apartmentId) {
+    public void bookApartment(@RequestParam("userId") int userId, @RequestParam("apartmentId") int apartmentId) throws ControllerException {
         try {
             bookingLogic.bookApartment(userId, apartmentId);
         } catch (LogicException e) {
-            logger.error(e.getMessage());
+            throw new ControllerException(e);
         }
     }
 
 
     @PostMapping(consumes = MEDIA_TYPE_JSON)
-    public void bookApartments(@RequestParam("userId") int userId, @RequestBody Apartment[] apartments) {
+    public void bookApartments(@RequestParam("userId") int userId, @RequestBody Apartment[] apartments) throws ControllerException {
         try {
             bookingLogic.bookApartments(userId, apartments);
         } catch (LogicException e) {
-            logger.error(e.getMessage());
+            throw new ControllerException(e);
         }
     }
 
     @DeleteMapping
-    public void freeApartment(@RequestParam("userId") int userId, @RequestParam("apartmentId") int apartmentId) {
+    public void freeApartment(@RequestParam("userId") int userId, @RequestParam("apartmentId") int apartmentId) throws ControllerException {
         try {
             bookingLogic.freeApartment(userId, apartmentId);
         } catch (LogicException e) {
-            logger.error(e.getMessage());
+            throw new ControllerException(e);
         }
     }
 
     @DeleteMapping(consumes = MEDIA_TYPE_JSON)
-    public void freeApartment(@RequestParam("userId") int userId, @RequestBody Apartment apartment) {
+    public void freeApartment(@RequestParam("userId") int userId, @RequestBody Apartment apartment) throws ControllerException {
         try {
             bookingLogic.freeApartment(userId, apartment);
         } catch (LogicException e) {
-            logger.error(e.getMessage());
+            throw new ControllerException(e);
         }
     }
 
