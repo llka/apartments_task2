@@ -10,7 +10,6 @@ import ru.ilka.apartments.exception.ControllerException;
 import ru.ilka.apartments.exception.LogicException;
 import ru.ilka.apartments.logic.ApartmentLogic;
 
-import java.util.ArrayList;
 import java.util.List;
 
 

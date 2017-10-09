@@ -26,6 +26,10 @@ public class User implements IDatabaseEntity {
     @Column(name = "BAN")
     private boolean ban;
 
+    @Column(name = "ROLE")
+    @Enumerated(EnumType.STRING)
+    private Role role = Role.GUEST;
+
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "USERS_HAS_APARTMENTS",
             joinColumns = @JoinColumn(name = "USERS_FK", referencedColumnName = "ID"),
@@ -85,6 +89,14 @@ public class User implements IDatabaseEntity {
         this.ban = ban;
     }
 
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
     public Set<Apartment> getApartments() {
         return apartments;
     }
@@ -123,6 +135,7 @@ public class User implements IDatabaseEntity {
                 ", login='" + login + '\'' +
                 ", password='" + password + '\'' +
                 ", ban=" + ban +
+                ", role=" + role +
                 '}';
     }
 }
