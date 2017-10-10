@@ -30,6 +30,9 @@ public class User implements IDatabaseEntity {
     @Enumerated(EnumType.STRING)
     private Role role = Role.GUEST;
 
+    @Column(name = "ENABLED", columnDefinition = "boolean default true", nullable = false)
+    private boolean enabled;
+
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "USERS_HAS_APARTMENTS",
             joinColumns = @JoinColumn(name = "USERS_FK", referencedColumnName = "ID"),
@@ -55,6 +58,8 @@ public class User implements IDatabaseEntity {
         this.password = user.password;
         this.ban = user.ban;
         this.apartments = user.apartments;
+        this.role = user.role;
+        this.enabled = user.enabled;
     }
 
     public int getId() {

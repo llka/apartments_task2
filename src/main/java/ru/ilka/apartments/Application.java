@@ -35,10 +35,6 @@ public class Application implements CommandLineRunner {
 
     @Override
     public void run(String... strings) throws Exception {
-
-        User user1 = new User(1,"first", "pass", false);
-        userLogic.save(user1);
-
         logger.debug("users - findAll");
         ArrayList<User> users = (ArrayList<User>) userLogic.findAll();
         users.forEach(user -> logger.info(user));
