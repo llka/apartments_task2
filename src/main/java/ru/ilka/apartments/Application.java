@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import ru.ilka.apartments.entity.Apartment;
 import ru.ilka.apartments.entity.User;
 import ru.ilka.apartments.logic.ApartmentLogic;
@@ -29,12 +30,18 @@ public class Application implements CommandLineRunner {
     @Autowired
     private ApartmentLogic apartmentLogic;
 
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
     public static void main(String[] args) throws Exception {
         SpringApplication.run(Application.class, args);
     }
 
     @Override
     public void run(String... strings) throws Exception {
+
+        logger.info("1111 - " + bCryptPasswordEncoder.encode("1111"));
+
         logger.debug("users - findAll");
         ArrayList<User> users = (ArrayList<User>) userLogic.findAll();
         users.forEach(user -> logger.info(user));

@@ -49,6 +49,7 @@ public class User implements IDatabaseEntity {
         this.login = login;
         this.password = password;
         this.ban = ban;
+        this.enabled = !ban;
         this.apartments = new HashSet<>();
     }
 
@@ -92,6 +93,7 @@ public class User implements IDatabaseEntity {
 
     public void setBan(boolean ban) {
         this.ban = ban;
+        this.enabled = !ban;
     }
 
     public Role getRole() {

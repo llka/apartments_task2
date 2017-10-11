@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import ru.ilka.apartments.handler.AuthFailureHandler;
 import ru.ilka.apartments.logic.UserLogic;
 
 import javax.sql.DataSource;
@@ -19,10 +20,6 @@ import java.sql.SQLException;
 @ComponentScan(value = "ru.ilka.apartments")
 @PropertySource("classpath:application.properties")
 public class Config {
-    @Bean
-    public UserLogic userLogic() {
-        return new UserLogic();
-    }
 
     @Value("${spring.datasource.driver-class-name}")
     private String driver;
@@ -32,6 +29,9 @@ public class Config {
     private String username;
     @Value("${spring.datasource.password}")
     private String password;
+
+    @Value("${password-encoder.strength}")
+    private int passwordStrength;
 
     @Bean
     DataSource dataSource() throws SQLException {
@@ -46,7 +46,17 @@ public class Config {
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(passwordStrength);
         return bCryptPasswordEncoder;
+    }
+
+    @Bean
+    public UserLogic userLogic() {
+        return new UserLogic();
+    }
+
+    @Bean
+    public AuthFailureHandler authFailureHandler(){
+        return new AuthFailureHandler();
     }
 }

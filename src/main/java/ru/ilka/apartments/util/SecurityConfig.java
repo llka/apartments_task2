@@ -12,10 +12,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import ru.ilka.apartments.handler.AuthFailureHandler;
 
 import javax.sql.DataSource;
 
@@ -31,6 +29,9 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
+    private AuthFailureHandler authFailureHandler;
+
+    @Autowired
     private DataSource dataSource;
 
     @Value("${spring.queries.users-query}")
@@ -39,56 +40,33 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
     @Value("${spring.queries.roles-query}")
     private String rolesQuery;
 
-
     @Autowired
     protected void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.
                 jdbcAuthentication()
                     .dataSource(dataSource)
+                    .passwordEncoder(bCryptPasswordEncoder)
                     .usersByUsernameQuery(usersQuery)
-                    .authoritiesByUsernameQuery(rolesQuery)
-                    .passwordEncoder(bCryptPasswordEncoder);
+                    .authoritiesByUsernameQuery(rolesQuery);
     }
-
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//
-//        http.
-//                authorizeRequests()
-//                    .antMatchers("/").permitAll()
-//                    .antMatchers("/login").permitAll()
-//                    .antMatchers("/register").permitAll()
-//                    .antMatchers("/admin/**").hasAuthority("ADMIN")
-//                    .anyRequest().authenticated()
-//                    .and()
-//                .csrf()
-//                    .disable()
-//                .formLogin()
-//                    .loginPage("/login")
-//                    .failureUrl("/login?error=true")
-//                    .defaultSuccessUrl("/admin/home")
-//                    .usernameParameter("email")
-//                    .passwordParameter("password")
-//                    .and()
-//                .logout()
-//                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-//                    .logoutSuccessUrl("/").and().exceptionHandling()
-//                    .accessDeniedPage("/access-denied");
-//    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()
                 .authorizeRequests()
                     .antMatchers("/","/start","/login","signup","/about").permitAll()
                     .antMatchers("/admin").hasRole("ADMIN")
                     .antMatchers("/admin/**").hasRole("ADMIN")
+                    .antMatchers("/user","/user/**").hasAuthority("USER")
+                    .antMatchers("/apartment","/apartment/**").hasAuthority("USER")
+                    .antMatchers("/hotel","/hotel/**").hasAuthority("USER")
                     .anyRequest().authenticated()
                     .and()
+                .csrf()
+                    .disable()
                 .formLogin()
                     .loginPage("/login")
-                    .failureUrl("/login?error=true")
+                    .failureHandler(authFailureHandler)
                     .defaultSuccessUrl("/login?access=allow")
                     .usernameParameter("login")
                     .passwordParameter("password")
@@ -99,9 +77,8 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
                     .invalidateHttpSession(true)
                     .and()
                 .exceptionHandling()
-                    .accessDeniedPage("/denied");
+                    .accessDeniedPage("/login?access=denied");
     }
-
 
     @Override
     public void configure(WebSecurity web) throws Exception {

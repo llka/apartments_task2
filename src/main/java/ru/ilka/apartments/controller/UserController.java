@@ -26,11 +26,11 @@ public class UserController {
 
     @GetMapping(produces = MEDIA_TYPE_JSON)
     public List<User> getAllUsers(@RequestParam(value = "ban", required = false) Boolean ban) {
-        if(ban == null) {
+        if (ban == null) {
             return userLogic.findAll();
-        }else if (ban){
+        } else if (ban) {
             return userLogic.findAllBanned();
-        }else {
+        } else {
             return userLogic.findAllNotBanned();
         }
     }
