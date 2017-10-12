@@ -2,11 +2,14 @@ package ru.ilka.apartments.logic;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.ilka.apartments.dao.UserRepository;
 import ru.ilka.apartments.entity.Apartment;
+import ru.ilka.apartments.entity.Role;
 import ru.ilka.apartments.entity.User;
 import ru.ilka.apartments.exception.LogicException;
+import ru.ilka.apartments.validator.AccountValidator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +20,12 @@ public class UserLogic {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
+    @Autowired
+    private AccountValidator accountValidator;
 
     public User findById(int id) throws LogicException {
         User user = userRepository.findOne(id);
@@ -71,5 +80,26 @@ public class UserLogic {
             throw new LogicException("Can not get user apartments", e);
         }
         return bookedApartments;
+    }
+
+    public LogicResult register(User user) {
+        String login = user.getLogin();
+        String password = user.getPassword();
+        if (!accountValidator.validateLogin(login)) {
+            return LogicResult.INVALID_LOGIN;
+        }
+        if (!accountValidator.validatePassword(password)) {
+            return LogicResult.INVALID_PASSWORD;
+        }
+        try {
+            findByLogin(login);
+            return LogicResult.LOGIN_NOT_UNIQUE;
+        } catch (LogicException e) {
+            user.setRole(Role.USER);
+            user.setBan(false);
+            user.setPassword(passwordEncoder.encode(password));
+            save(user);
+            return LogicResult.OK;
+        }
     }
 }

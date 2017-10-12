@@ -16,7 +16,7 @@ public class LoginController {
     private static final String LOG_OUT_SUCCESS_MSG = "You've been logged out successfully.";
     private static final String LOG_IN_SUCCESS_MSG = " have been logged in successfully.";
     private static final String INVALID_PASS_MSG = "Invalid username or password!";
-    private static final String ACCESS_DENIED_MSG = "Access denied, please, sign in";
+    private static final String ACCESS_DENIED_MSG = "Access denied, please, sign in.";
 
     @GetMapping()
     public String loginResult(@RequestParam(value = "error", required = false) String error,
@@ -25,7 +25,6 @@ public class LoginController {
                               @RequestParam(value = "ban", required = false) String ban) {
 
         String userLogin = "";
-        String resultMessage = ACCESS_DENIED_MSG;
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
@@ -52,6 +51,6 @@ public class LoginController {
             return BANNED_USER_MSG;
         }
 
-        return resultMessage;
+        return ACCESS_DENIED_MSG;
     }
 }

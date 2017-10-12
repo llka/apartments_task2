@@ -10,6 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import ru.ilka.apartments.handler.AuthFailureHandler;
 import ru.ilka.apartments.logic.UserLogic;
+import ru.ilka.apartments.validator.AccountValidator;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
@@ -56,7 +57,12 @@ public class Config {
     }
 
     @Bean
-    public AuthFailureHandler authFailureHandler(){
+    public AuthFailureHandler authFailureHandler() {
         return new AuthFailureHandler();
+    }
+
+    @Bean
+    public AccountValidator accountValidator() {
+        return new AccountValidator();
     }
 }
